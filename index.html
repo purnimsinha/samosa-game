@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catch the Samosa</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #fff7e6;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+    }
+    #player {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      width: 100px;
+      height: 30px;
+      background: #ff9900;
+      border-radius: 15px;
+      transform: translateX(-50%);
+    }
+    .samosa {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-image: url('samosa.avif'); /* example samosa image */
+      background-size: cover;
+    }
+    #scoreBoard {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="player"></div>
+  <div id="scoreBoard">Score: <span id="score">0</span></div>
+
+  <script>
+    const player = document.getElementById('player');
+    const scoreSpan = document.getElementById('score');
+    let score = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      player.style.left = `${e.clientX}px`;
+    });
+
+    function dropSamosa() {
+      const samosa = document.createElement('div');
+      samosa.className = 'samosa';
+      samosa.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+      document.body.appendChild(samosa);
+
+      let top = 0;
+      const fall = setInterval(() => {
+        if (top >= window.innerHeight - 100) {
+          const playerLeft = player.offsetLeft;
+          const playerRight = playerLeft + player.offsetWidth;
+          const samosaLeft = samosa.offsetLeft;
+          const samosaRight = samosaLeft + samosa.offsetWidth;
+
+          if (samosaRight > playerLeft && samosaLeft < playerRight) {
+            score++;
+            scoreSpan.textContent = score;
+          }
+
+          clearInterval(fall);
+          samosa.remove();
+        } else {
+          top += 5;
+          samosa.style.top = top + 'px';
+        }
+      }, 30);
+    }
+
+    setInterval(dropSamosa, 1000);
+  </script>
+</body>
+</html>
